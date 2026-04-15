@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 220 20% 97%;
+    --foreground: 220 30% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 30% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 30% 12%;
+
+    --primary: 220 55% 22%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 15% 92%;
+    --secondary-foreground: 220 30% 12%;
+
+    --muted: 220 15% 94%;
+    --muted-foreground: 220 10% 46%;
+
+    --accent: 175 55% 38%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 15% 88%;
+    --input: 220 15% 88%;
+    --ring: 220 55% 22%;
+
+    --radius: 0.625rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Academic status colors */
+    --status-confirmed: 145 60% 42%;
+    --status-confirmed-bg: 145 60% 94%;
+    --status-rejected: 0 70% 55%;
+    --status-rejected-bg: 0 70% 95%;
+    --status-onhold: 42 90% 50%;
+    --status-onhold-bg: 42 90% 94%;
+    --status-scheduled: 220 60% 55%;
+    --status-scheduled-bg: 220 60% 94%;
+    --status-unscheduled: 220 10% 65%;
+
+    /* Block pastel colors */
+    --block-coral: 0 70% 80%;
+    --block-sky: 200 70% 80%;
+    --block-mint: 160 50% 78%;
+    --block-lavender: 260 50% 82%;
+    --block-amber: 40 80% 78%;
+    --block-rose: 320 50% 80%;
+
+    /* Calendar layer colors */
+    --layer-institution: 270 60% 65%;
+    --layer-faculty: 230 65% 60%;
+    --layer-department: 210 70% 60%;
+    --layer-program: 175 55% 48%;
+    --layer-batch: 145 55% 50%;
+    --layer-section: 25 80% 55%;
+
+    /* Canvas */
+    --canvas-bg: 220 15% 95%;
+    --canvas-grid: 220 15% 90%;
+    --canvas-dot: 220 15% 82%;
+
+    /* Time grid */
+    --grid-line: 220 15% 92%;
+    --grid-header: 220 20% 97%;
+    --grid-now: 0 70% 55%;
+  }
+
+  .dark {
+    --background: 222 30% 8%;
+    --foreground: 210 30% 92%;
+    --card: 222 25% 12%;
+    --card-foreground: 210 30% 92%;
+    --popover: 222 25% 12%;
+    --popover-foreground: 210 30% 92%;
+    --primary: 210 50% 65%;
+    --primary-foreground: 222 30% 8%;
+    --secondary: 217 25% 18%;
+    --secondary-foreground: 210 30% 92%;
+    --muted: 217 25% 18%;
+    --muted-foreground: 215 15% 60%;
+    --accent: 175 45% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 35%;
+    --destructive-foreground: 210 30% 92%;
+    --border: 217 25% 20%;
+    --input: 217 25% 20%;
+    --ring: 210 50% 65%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --layer-institution: 270 50% 55%;
+    --layer-faculty: 230 55% 50%;
+    --layer-department: 210 60% 50%;
+    --layer-program: 175 45% 40%;
+    --layer-batch: 145 45% 40%;
+    --layer-section: 25 70% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+  }
+}
+
+/* ReactFlow overrides */
+.react-flow__node {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.react-flow__edge-path {
+  stroke: hsl(var(--primary)) !important;
+  stroke-width: 2 !important;
+}
+
+.react-flow__handle {
+  width: 10px !important;
+  height: 10px !important;
+  background: hsl(var(--accent)) !important;
+  border: 2px solid hsl(var(--card)) !important;
+}
+
+.react-flow__controls {
+  display: none !important;
+}
+
+.react-flow__background {
+  background: hsl(var(--canvas-bg)) !important;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
+}
