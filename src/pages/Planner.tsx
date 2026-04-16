@@ -5,7 +5,8 @@ import { BlockPropertiesPanel } from '@/components/academic/BlockPropertiesPanel
 import { TemplateListView } from '@/components/academic/TemplateListView';
 import { useAcademicStore } from '@/store/useAcademicStore';
 import { useAuth } from '@/hooks/useAuth';
-import { GraduationCap, LogOut, List, ChevronRight, Workflow, FileText, FileEdit } from 'lucide-react';
+import { GraduationCap, LogOut, List, ChevronRight, Workflow, FileText, FileEdit, CalendarCheck } from 'lucide-react';
+import { FinalizedListView } from '@/components/academic/FinalizedListView';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
@@ -140,17 +141,25 @@ export default function Planner() {
               <FileEdit className="w-4 h-4" />
               Drafts
             </TabsTrigger>
+            <TabsTrigger
+              value="finalized"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-accent data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 py-2.5 text-sm gap-1.5 text-accent"
+            >
+              <CalendarCheck className="w-4 h-4" />
+              Finalized Schedules
+            </TabsTrigger>
           </TabsList>
         </div>
 
-        <TabsContent value="builder" className="flex-1 flex overflow-hidden mt-0">
-          {/* Flow Canvas (main area) */}
-          <div className="flex-1 min-w-0 overflow-hidden flex flex-col">
-            <TemplateHeader />
-            <div className="flex-1 min-h-0">
-              <FlowCanvas />
+        <TabsContent value="builder" className="m-0 border-none p-0 outline-none h-full w-full data-[state=inactive]:hidden">
+          <div className="flex-1 flex overflow-hidden h-full">
+            {/* Flow Canvas (main area) */}
+            <div className="flex-1 min-w-0 overflow-hidden flex flex-col">
+              <TemplateHeader />
+              <div className="flex-1 min-h-0">
+                <FlowCanvas />
+              </div>
             </div>
-          </div>
 
           {/* Workflow Summary Panel */}
           {showSummary && (
@@ -159,16 +168,20 @@ export default function Planner() {
             </div>
           )}
 
-          {/* Properties Panel */}
-          {showPanel && <BlockPropertiesPanel />}
+            {showPanel && <BlockPropertiesPanel />}
+          </div>
         </TabsContent>
 
-        <TabsContent value="templates" className="flex-1 overflow-y-auto mt-0">
+        <TabsContent value="templates" className="m-0 p-0 outline-none h-full overflow-y-auto data-[state=inactive]:hidden">
           <TemplateListView filter="template" onSwitchToBuilder={switchToBuilder} />
         </TabsContent>
 
-        <TabsContent value="drafts" className="flex-1 overflow-y-auto mt-0">
+        <TabsContent value="drafts" className="m-0 p-0 outline-none h-full overflow-y-auto data-[state=inactive]:hidden">
           <TemplateListView filter="draft" onSwitchToBuilder={switchToBuilder} />
+        </TabsContent>
+
+        <TabsContent value="finalized" className="m-0 p-0 outline-none h-full overflow-y-auto bg-accent/5 data-[state=inactive]:hidden">
+          <FinalizedListView />
         </TabsContent>
       </Tabs>
     </div>
