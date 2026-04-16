@@ -11,6 +11,8 @@ import {
   eachDayOfInterval, 
   isValid 
 } from "date-fns";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 import { GraduationCap } from "lucide-react";
 
 // ── tokens ────────────────────────────────────────────────────────────────────
@@ -278,6 +280,25 @@ export default function FinalCalendar() {
     })();
   }, []);
 
+  const exportPDF = async () => {
+    const element = document.getElementById("calendar-export-root");
+    if (!element) return;
+    
+    // Optional: add loading toast here if needed
+    try {
+      const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("l", "pt", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Academic_Calendar_${view}.pdf`);
+    } catch (error) {
+      console.error("Export Error:", error);
+    }
+  };
+
   const allItems = useMemo(() => {
     const items: { block: any; event: any; template: any }[] = [];
     for (const template of store.templates) {
@@ -315,11 +336,11 @@ export default function FinalCalendar() {
             ))}
           </div>
           <button onClick={() => navigate("/dashboard")} style={{ padding: "9px 18px", border: "1.5px solid #dbe8e8", borderRadius: 9, background: "#fff", cursor: "pointer", fontSize: 13, color: "#455a64", fontWeight: 600 }}>← Back to Dashboard</button>
-          <button style={{ padding: "9px 18px", border: "none", borderRadius: 9, background: T, cursor: "pointer", fontSize: 13, color: "#fff", fontWeight: 700 }}>Export PDF</button>
+          <button onClick={exportPDF} style={{ padding: "9px 18px", border: "none", borderRadius: 9, background: T, cursor: "pointer", fontSize: 13, color: "#fff", fontWeight: 700 }}>Export PDF</button>
         </div>
       </div>
 
-      <div style={{ padding: "24px 32px" }}>
+      <div id="calendar-export-root" style={{ padding: "24px 32px" }}>
         {/* summary chips removed to prevent clutter */}
         {unset.length > 0 && confirmed.length === 0 && skipped.length === 0 && (
           <div style={{ background: "#fff", borderRadius: 12, padding: "24px", textAlign: "center", marginBottom: 20, border: "1.5px dashed #dbe8e8" }}>
