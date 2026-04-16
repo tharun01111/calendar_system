@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { useAcademicStore } from '@/store/useAcademicStore';
 import {
   format, parseISO, addDays, startOfMonth, endOfMonth, eachDayOfInterval,
   startOfWeek, endOfWeek, isToday, addMonths, subMonths, addWeeks, subWeeks, isSameDay
@@ -102,7 +103,41 @@ export default function FinalizeFlow() {
       const { data: flowData } = await supabase.from('flow_templates').select('*').eq('id', flowId).single();
       if (flowData) setFlow(flowData as FlowTemplate);
       const { data: actData } = await supabase.from('flow_activities').select('*').eq('flow_template_id', flowId).order('sequence_order');
-      if (actData) setActivities(actData as FlowActivity[]);
+      
+      let finalActivities = actData ? (actData as FlowActivity[]) : [];
+
+      if (finalActivities.length === 0 && flowData) {
+        // Fallback to local store if blocks weren't synced to Supabase (user's local flow builder)
+        const store = useAcademicStore.getState();
+        const localTemplate = store.templates.find(t => t.name === flowData.name);
+        if (localTemplate) {
+          finalActivities = localTemplate.blocks
+            .filter(b => !b.locked && b.active)
+            .map((b, idx) => ({
+              id: b.id,
+              name: b.name,
+              stage: b.category || null,
+              duration_days: b.duration ? Math.ceil(b.duration / 24) : 1,
+              sequence_order: idx
+            }));
+            
+          // We must sync these localized activities to Supabase so that the final 'generated_calendar_events'
+          // has valid foreign keys mapping to 'flow_activities' id.
+          if (finalActivities.length > 0) {
+            const inserts = finalActivities.map(a => ({
+              id: a.id,
+              flow_template_id: flowId,
+              name: a.name,
+              stage: a.stage,
+              duration_days: a.duration_days,
+              sequence_order: a.sequence_order
+            }));
+            await supabase.from('flow_activities').upsert(inserts);
+          }
+        }
+      }
+
+      setActivities(finalActivities);
       setLoading(false);
     })();
   }, [flowId]);
